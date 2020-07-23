@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>计算属性和监视</title>
+</head>
+<body>
+    <div id="app">
+        <h2>1. 双大括号表达式</h2>
+        <p>{{msg}}</p>
+        <p>{{msg.toUpperCase()}}</p>
+        <p v-html="baiduLink"></p>
+        <p v-text="baiduLink"></p>
+
+        <h2>2. 指令1：强制数据绑定</h2>
+        <img src="imageUrl" /><br/>
+        <img v-bind:src="imageUrl" style="width: 80px; height: 30px" /><br/>
+        <img :src="imageUrl" style="width: 80px; height: 30px" /><br/>
+
+        <h2>3. 指令2：绑定事件监听</h2>
+        <button v-on:click="test1">test1</button><br/>
+        <button @click="test2(msg)">test2</button><br/>
+    </div>
+
+    <script type="text/javascript" src="./vue.js"></script>
+    <script type="text/javascript">
+        const vm = new Vue({
+          el: '#app',
+          /**
+           * 数据
+           */
+          data: {
+            msg: 'you still have lots more to work on',
+            baiduLink: '<a href="https://www.baidu.com">百度</a>',
+            imageUrl: 'https://fanyi-cdn.cdn.bcebos.com/static/translation/img/header/logo_40c4f13.svg'
+          },
+          /**
+           * 方法
+           */
+          methods: {
+            test1() {
+              alert("111");
+            },
+            test2(content) {
+              alert(content);
+            }
+          }
+        })
+
+    </script>
+</body>
+</html>
