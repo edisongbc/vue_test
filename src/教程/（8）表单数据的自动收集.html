@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>表单数据的自动收集</title>
+</head>
+<body>
+    <div id="demo">
+        <form action="/xxx" @submit.prevent="handleSubmit">
+            <span>用户名：</span>
+            <input type="text" v-model="userName" /><br/>
+
+            <span>密码：</span>
+            <input type="password" v-model="pwd" /><br/>
+
+            <span>性别：</span>
+            <input type="radio" id="female" value="1" v-model="sex" />
+            <label for="female">女</label>
+            <input type="radio" id="male" value="2" v-model="sex" />
+            <label for="male">男</label><br/>
+
+            <span>爱好：</span>
+            <input type="checkbox" id="basketBall" value="basketBall" v-model="likes" />
+            <label for="basketBall">篮球</label>
+            <input type="checkbox" id="footBall" value="footBall" v-model="likes" />
+            <label for="footBall">足球</label>
+            <input type="checkbox" id="pingpang" value="pingpang" v-model="likes" />
+            <label for="pingpang">乒乓球</label><br/>
+
+            <span>城市：</span>
+            <select v-model="selCity">
+                <option value="">未选择</option>
+                <option :value="city.id" v-for="(city, index) in cities" :key="index">{{city.name}}</option>
+            </select><br/>
+
+            <span>备注：</span>
+            <textarea rows="10" v-model="remark"></textarea><br/><br/>
+
+            <input type="submit" value="注册" />
+        </form>
+    </div>
+
+    <script type="text/javascript" src="./vue.js"></script>
+    <script type="text/javascript">
+        const vm = new Vue({
+          el: '#demo',
+          data: {
+            userName: '',
+            pwd: '',
+            sex: 1,
+            likes: ['pingpang'],
+            cities: [{id:1, name:'杭州'}, {id:2, name:'诸暨'}, {id:3, name:'宁波'}, {id:4, name:'金华'}],
+            selCity: 2,
+            remark: ''
+          },
+          methods: {
+            handleSubmit() {
+              console.log(this.userName, this.pwd, this.sex, this.likes, this.selCity, this.remark);
+            }
+          }
+        })
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>事件处理</title>
+</head>
+<body>
+    <div id="demo">
+        <h2>1. 绑定监听</h2>
+        <button @click="test1">test1</button>
+        <button @click="test2('gbc', $event)">test2</button>
+
+        <h2>2. 事件修饰符</h2>
+        <!-- 停止事件冒泡【@click.stop】-->
+        <div style="width: 200px; height: 200px; background-color: red" @click="test3('out')">
+            <div style="width: 100px; height: 100px; background-color: cornflowerblue" @click.stop="test3('in')"></div>
+        </div>
+        <!-- 阻止事件默认行为【@click.prevent】 -->
+        <a href="https://www.baidu.com" @click.prevent="test3('点击了超链接')">百度</a>
+
+        <h2>3. 按键修饰符</h2>
+        <input type="text" @keyup.13="test4" />
+        <input type="text" @keyup.enter="test4" />
+    </div>
+
+    <script type="text/javascript" src="./vue.js"></script>
+    <script type="text/javascript">
+        const vm = new Vue({
+          el: '#demo',
+          data: {
+
+          },
+          methods: {
+            test1 (event) {
+              alert(event.target.innerHTML);
+            },
+            test2 (content, event) {
+              alert(content + ' --- ' + event.target.innerHTML);
+            },
+            test3 (content) {
+              alert(content);
+            },
+            test4 (event) {
+              alert('value: ' + event.target.value + '  keyCode: ' + event.keyCode);
+            }
+          }
+        })
+
+    </script>
+</body>
+</html>
