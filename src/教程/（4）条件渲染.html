@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>条件渲染</title>
+</head>
+<body>
+    <div id="demo">
+        <p v-if="ok">成功了</p>
+        <p v-else>失败了</p>
+
+        <p v-show="ok">充值成功了</p>
+        <p v-show="!ok">充值失败了</p>
+
+        <button @click="ok=!ok">切换</button>
+    </div>
+
+    <script type="text/javascript" src="./vue.js"></script>
+    <script type="text/javascript">
+        const vm = new Vue({
+          el: '#demo',
+          data: {
+            ok: true
+          }
+        })
+
+    </script>
+</body>
+</html>

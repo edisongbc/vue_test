@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>强制绑定class和style</title>
+    <style>
+        .aClass {
+            color: darkred;
+        }
+        .bClass {
+            color: greenyellow;
+        }
+        .cClass {
+            font-size: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div id="demo">
+        <h2>1、class绑定： :class='xxx'</h2>
+        <p :class="a">xxx是字符串</p>
+        <p :class="{aClass: isA, bClass: isB}">xxx是对象</p>
+        <p :class="['aClass', 'cClass']">xxx是数组</p>
+
+        <h2>2、style绑定：</h2>
+        <p :style="{color: activeColor, fontSize: fontSize + 'px'}">color: activeColor, fontSize: fontSize + 'px'</p>
+
+        <button @click="update">更新</button>
+    </div>
+
+    <script type="text/javascript" src="./vue.js"></script>
+    <script type="text/javascript">
+        const vm = new Vue({
+          el: '#demo',
+          data: {
+            a: 'aClass',
+            isA: false,
+            isB: true,
+            activeColor: 'pink',
+            fontSize: 20
+          },
+          methods: {
+            update() {
+              if (this.a == 'aClass') {
+                this.a = 'bClass';
+                this.isA = true;
+                this.isB = false;
+                this.activeColor='yellow';
+                this.fontSize=40;
+              } else {
+                this.a = 'aClass';
+                this.isA = false;
+                this.isB = true;
+                this.activeColor='pink';
+                this.fontSize=20;
+              }
+            }
+          }
+        })
+
+    </script>
+</body>
+</html>
