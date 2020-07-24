@@ -25,9 +25,23 @@
             }
           },
           /**
-           * 初始化显示之后立即调用
+           * 生命周期第一阶段：初始化页面阶段（只执行1次）
            */
+          // 创建前
+          beforeCreate() {
+            console.log('beforeCreate');
+          },
+          // 创建完成
+          created () {
+            console.log('created');
+          },
+          // 页面加载前
+          beforeMount() {
+            console.log('beforeMount');
+          },
+          // 页面加载完成
           mounted() {
+            console.log('mounted');
             // 设置定时器
             this.intervalID = setInterval(() => {
                 console.log('--- setInterval ---');
@@ -35,11 +49,28 @@
             }, 1000)
           },
           /**
-           * vm销毁前调用
+           * 生命周期第二阶段：数据更新显示阶段（执行N次）
            */
+          // 数据更新前
+          beforeUpdate () {
+            console.log('beforeUpdate');
+          },
+          // 数据更新后
+          updated() {
+            console.log('updated');
+          },
+          /**
+           * 生命周期第三阶段：死亡销毁阶段（只执行1次）
+           */
+          // 销毁前
           beforeDestroy() {
+            console.log('beforeDestroy');
             // 清除定时器
             clearInterval(this.intervalID);
+          },
+          // 销毁后
+          destroyed() {
+            console.log('destroyed');
           }
         })
 

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Vue指令</title>
+    <style>
+        /*属性选择器：有该属性的拥有此样式*/
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!--    内部指令-->
+    <div id="demo">
+        <p ref="order1">指令【ref】：为某个元素注册一个唯一标识，vue对象通过属性访问</p>
+        <button @click="refTest">ref指令测试</button>
+        <p v-cloak>{{msg}}</p>
+    </div>
+
+    <!--    自定义指令-->
+    <div id="test1">
+        <p v-cloak v-upper-text="msg1"></p>
+        <p v-lower-text="msg2"></p>
+    </div>
+
+    <div id="test2">
+        <p v-cloak v-upper-text="msg3"></p>
+        <p v-no-space="msg4"></p>
+    </div>
+
+    <script type="text/javascript" src="./vue.js"></script>
+    <script type="text/javascript">
+        alert('等待观察');
+
+        /**
+         * demo Vue
+         */
+        const vm = new Vue({
+          el: '#demo',
+          data: {
+            msg: '指令【cloak】：防止闪现，配合样式【display: none】使用'
+          },
+          methods: {
+            refTest() {
+              alert(this.$refs.order1.textContent);
+            }
+          }
+        })
+
+        /**
+         * 定义全局指令：(指令名， 回调函数() {
+         *     el: 指令属性所在的标签对象
+         *     binding: 包含指令相关信息数据的对象
+         * })
+         */
+        Vue.directive("upper-text", function (el, binding) {
+          console.log(el,  binding);
+          el.textContent = binding.value.toUpperCase();
+        })
+
+        /**
+         * test1 Vue
+         */
+        new Vue({
+          el: '#test1',
+          data: {
+            msg1: 'Edison Like Photography',
+            msg2: 'Kobe Like BasketBall'
+          },
+          /**
+           * 局部指令
+           */
+          directives: {
+            'lower-text': function (el, binding) {
+                el.textContent = binding.value.toLowerCase();
+            }
+          }
+        })
+
+        /**
+         * test2 Vue
+         */
+        new Vue({
+          el: '#test2',
+          data: {
+            msg3: 'Henry Like FootBall',
+            msg4: 'Phelps Like Swimming'
+          },
+          /**
+           * 局部指令
+           */
+          directives: {
+            'no-space': function (el, binding) {
+                el.textContent = binding.value.replace(' ', '');
+            }
+          }
+        })
+
+    </script>
+</body>
+</html>
