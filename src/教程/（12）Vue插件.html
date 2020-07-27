@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Vue插件</title>
+</head>
+<body>
+    <div id="demo">
+        <p v-my-directive="myProperty"></p>
+        <button @click="test">测试Vue插件</button>
+    </div>
+
+    <script type="text/javascript" src="./vue.js"></script>
+    <script type="text/javascript" src="./vue-myPlugin.js"></script>
+    <script type="text/javascript">
+        // 安装我的Vue插件（内部调用MyPlugin.install(Vue)）
+        Vue.use(MyPlugin)
+
+        Vue.myGlobalMethod()
+
+        const vm = new Vue({
+          el: '#demo',
+          data: {
+            myProperty: Vue.myProperty
+          },
+          methods: {
+            test() {
+              alert(this.$myMethod('edisongbc'))
+            }
+          }
+        })
+
+    </script>
+</body>
+</html>
