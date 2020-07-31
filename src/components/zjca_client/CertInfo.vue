@@ -1,0 +1,73 @@
+<template>
+  <el-row type="flex" justify="space-around" :gutter="100">
+    <el-col :span="16" >
+      <div class="grid-content demo-block">
+        <h3>证书信息</h3>
+        <el-collapse>
+          <el-collapse-item v-for="(cert, index) in certArray" :key="index" :title="alg.get(cert.getAlg()) + usage.get(cert.getUsage())" :name="cert.getIndex()">
+            <div class="grid-content bg-purple" style="line-height: 36px; text-align: left;">
+              CN：{{cert.getSubjectCN()}}
+            </div>
+            <div class="grid-content bg-purple" style="line-height: 36px; text-align: left;">
+              SN：{{cert.getSN()}}
+            </div>
+            <div class="grid-content bg-purple" style="line-height: 36px; text-align: left;">
+              DN：{{cert.getDN()}}
+            </div>
+            <div class="grid-content bg-purple" style="line-height: 36px; text-align: left;">
+              起始时间：{{cert.getFrom()}}
+            </div>
+            <div class="grid-content bg-purple" style="line-height: 36px; text-align: left;">
+              截止时间：{{cert.getUntil()}}
+            </div>
+            <div class="grid-content bg-purple" style="line-height: 36px; text-align: left;">
+              颁发者CN：{{cert.getIssuerCN()}}
+            </div>
+          </el-collapse-item>
+        </el-collapse>
+        <br/>
+        <br/>
+      </div>
+    </el-col>
+  </el-row>
+</template>
+
+<script>
+  import PubSub from 'pubsub-js'
+
+  export default {
+    name: 'CertInfo',
+    props: {
+      certList: Array
+    },
+    created () {
+      /**
+       * 初始化数据
+       */
+      this.alg.set(1, 'RSA')
+      this.alg.set(2, 'SM2')
+      this.usage.set(1, '签名证书')
+      this.usage.set(2, '加密证书')
+    },
+    mounted () {
+      /**
+       * 订阅消息publishCertList：更改certList
+       */
+      PubSub.subscribe('publishCertList', (msg, certList) => {
+        debugger
+        this.certArray = certList
+      })
+    },
+    data() {
+      return {
+        certArray: this.certList,
+        alg: new Map(),
+        usage: new Map()
+      }
+    }
+  }
+</script>
+
+<style scoped>
+
+</style>

@@ -1,0 +1,110 @@
+<template>
+  <div>
+    <div>
+      <h1>This is an ZJCA CLIENT DEMO</h1>
+      <ClientInfo />
+      <el-select style="width: 400px" v-model="selIndex" placeholder="Please Choose the UKey" >
+        <el-option v-for="(key, index) in keyList" :key="index" :value="key.id" :label="key.name" />
+      </el-select>
+    </div>
+  </div>
+</template>
+
+<script>
+  // 引入ClientInfo组件
+  import ClientInfo from '../components/zjca_client/ClientInfo/ClientInfo'
+  // 引入jquery
+  import $ from 'jquery'
+
+  export default {
+    name: 'Demo',
+    // 声明组件
+    components: {
+      ClientInfo
+    },
+
+    data () {
+      return {
+        // 介质列表数组
+        keyList: [],
+        // ZJCA接口对象
+        g_ZjcaCMT: null,
+        // 选中的下拉设备索引
+        selIndex: null
+      }
+    },
+
+    computed: {
+
+    },
+
+    created () {
+      this.init()
+    },
+
+    mounted () {
+
+    },
+
+    methods: {
+      /**
+       * 初始化ZJCA客户端
+       */
+      init() {
+        console.log('init()')
+        // 创建ZJCA客户端控件对象
+        this.g_ZjcaCMT = new zjca_CMT(this.onCallbackKeyEvent, null)
+        // 初始化客户端
+        let resp = this.g_ZjcaCMT.init(1, 1)
+        if (resp.code != 0) {
+          alert('初始化ZJCA客户端失败【'+resp.code+'】');
+        } else {
+          try{
+            this.onCallbackKeyEvent()
+          } catch(e){
+            alert('获取证书设备失败：' + e.message);
+          }
+        }
+      },
+      /**
+       * 设备事件响应函数
+       */
+      onCallbackKeyEvent(type, index, name) {
+        console.log('onCallbackKeyEvent()')
+        // 删除原有介质
+        this.keyList = []
+        // 枚举介质列表
+        var resp = this.g_ZjcaCMT.getKeyList(false)
+        if (resp.code == 0) {
+          // 更新介质列表数组
+          const devices = resp.res
+          if(devices!==null) {
+            for (let i = 0; i < devices.length; i++) {
+              var keySN = devices[i].getSN()
+              var keyLabel = devices[i].getLabel()
+              var text = keyLabel + "(" + keySN + ")"
+              let uKey = {
+                id: i,
+                name: text,
+                selected: false
+              }
+              this.keyList.push(uKey)
+            }
+          }
+          // 判断更新selIndex
+          if (this.keyList.length>0) {
+            if (this.selIndex===null || this.selIndex>(this.keyList.length-1)) {
+              this.selIndex = 0;
+            }
+          } else {
+            this.selIndex = null
+          }
+        } else {
+          alert("枚举介质列表失败")
+        }
+      },
+    }
+
+  }
+
+</script>
