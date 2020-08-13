@@ -1,35 +1,26 @@
 <template>
-  <el-row type="flex" justify="space-around" :gutter="100">
-    <el-col :span="16" >
-      <div class="grid-content demo-block">
-        <h3>证书信息</h3>
-        <el-collapse>
-          <el-collapse-item v-for="(cert, index) in certArray" :key="index" :title="alg.get(cert.getAlg()) + usage.get(cert.getUsage())" :name="cert.getIndex()">
-            <div class="grid-content bg-purple" style="line-height: 36px; text-align: left;">
-              CN：{{cert.getSubjectCN()}}
-            </div>
-            <div class="grid-content bg-purple" style="line-height: 36px; text-align: left;">
-              SN：{{cert.getSN()}}
-            </div>
-            <div class="grid-content bg-purple" style="line-height: 36px; text-align: left;">
-              DN：{{cert.getDN()}}
-            </div>
-            <div class="grid-content bg-purple" style="line-height: 36px; text-align: left;">
-              起始时间：{{cert.getFrom()}}
-            </div>
-            <div class="grid-content bg-purple" style="line-height: 36px; text-align: left;">
-              截止时间：{{cert.getUntil()}}
-            </div>
-            <div class="grid-content bg-purple" style="line-height: 36px; text-align: left;">
-              颁发者CN：{{cert.getIssuerCN()}}
-            </div>
-          </el-collapse-item>
-        </el-collapse>
-        <br/>
-        <br/>
+  <el-collapse>
+    <el-collapse-item v-for="(cert, index) in certArray" :key="index" :title="alg.get(cert.getAlg()) + usage.get(cert.getUsage())" :name="cert.getIndex()">
+      <div class="grid-content bg-purple" style="line-height: 36px; text-align: left;">
+        CN：{{cert.getSubjectCN()}}
       </div>
-    </el-col>
-  </el-row>
+      <div class="grid-content bg-purple" style="line-height: 36px; text-align: left;">
+        SN：{{cert.getSN()}}
+      </div>
+      <div class="grid-content bg-purple" style="line-height: 36px; text-align: left;">
+        DN：{{cert.getDN()}}
+      </div>
+      <div class="grid-content bg-purple" style="line-height: 36px; text-align: left;">
+        起始时间：{{cert.getFrom()}}
+      </div>
+      <div class="grid-content bg-purple" style="line-height: 36px; text-align: left;">
+        截止时间：{{cert.getUntil()}}
+      </div>
+      <div class="grid-content bg-purple" style="line-height: 36px; text-align: left;">
+        颁发者CN：{{cert.getIssuerCN()}}
+      </div>
+    </el-collapse-item>
+  </el-collapse>
 </template>
 
 <script>
@@ -54,7 +45,6 @@
        * 订阅消息publishCertList：更改certList
        */
       PubSub.subscribe('publishCertList', (msg, certList) => {
-        debugger
         this.certArray = certList
       })
     },

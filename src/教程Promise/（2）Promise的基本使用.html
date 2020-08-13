@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Promise的基本使用</title>
+    <script src="//cdn.polyfill.io/v1/polyfill.min.js" async defer></script>
+</head>
+<body>
+    <div id="demo">
+
+    </div>
+
+    <script type="text/javascript">
+        const p = new Promise((resolve, reject) => {
+          // 执行异步操作任务
+          setTimeout(() => {
+            const time = Date.now()
+            if(time%2 === 0) {
+              // 偶数执行成功
+              resolve('成功的数据，time=' + time)
+            } else {
+              // 技术执行失败
+              reject('失败的数据，time=' + time)
+            }
+          }, 100)
+        })
+
+        p.then((value) => {
+          console.log('成功的回调', value)
+        }).catch((reason) => {
+          console.log('失败的回调', reason)
+        })
+
+    </script>
+</body>
+</html>

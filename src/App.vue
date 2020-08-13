@@ -4,8 +4,8 @@
       <router-link to="/">Home</router-link>
       <el-divider direction="vertical"></el-divider>
       <router-link to="/about">About</router-link>
-      <el-divider direction="vertical"></el-divider>
-      <router-link to="/demo">Demo</router-link>
+<!--      <el-divider direction="vertical"></el-divider>-->
+<!--      <router-link to="/demo">Demo</router-link>-->
       <el-divider direction="vertical"></el-divider>
       <router-link to="/zjca">ZJCA</router-link>
     </div>

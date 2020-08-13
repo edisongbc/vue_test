@@ -45,16 +45,16 @@
     },
     mounted () {
       /**
-       * 初始化赋值
+       * 显示选中的介质信息
        */
-      const key = this.keyList[this.selVal]
-      this.selKeySn = key.device.getSN();
-      this.selKeyLabel = key.device.getLabel();
+      this.showSelKeyInfo()
       /**
        * 订阅消息updateSelVal：更改selVal
        */
       PubSub.subscribe('updateSelVal', (msg, selIndex) => {
-        this.selVal = selIndex;
+        this.selVal = selIndex
+        // 显示选中的介质信息
+        this.showSelKeyInfo()
       })
     },
     data() {
@@ -66,16 +66,21 @@
     },
     methods: {
       /**
+       * 显示选中的介质信息
+       */
+      showSelKeyInfo() {
+        if (this.selVal!==null && this.keyList!==null && this.keyList.length>0) {
+          const key = this.keyList[this.selVal]
+          this.selKeySn = key.device.getSN()
+          this.selKeyLabel = key.device.getLabel()
+        }
+      },
+      /**
        * 变更select
        */
       selChange() {
-        // 显示介质信息
-        if (this.selVal !== null) {
-          console.log('selChange() --> keyList：' + this.keyList)
-          const key = this.keyList[this.selVal]
-          this.selKeySn = key.device.getSN();
-          this.selKeyLabel = key.device.getLabel();
-        }
+        // 显示选中的介质信息
+        this.showSelKeyInfo()
         // 触发事件监听updateSelIndex：更改selIndex
         // this.$emit('updateSelIndex', this.selVal)
         // 发布消息updateSelIndex：更改selIndex

@@ -1,0 +1,240 @@
+<template>
+  <div>
+    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form-item label="姓名" prop="name">
+        <el-input v-model="form.name"/>
+      </el-form-item>
+      <el-form-item label="身份证" prop="idCode">
+        <el-input v-model="form.idCode" maxlength="18" show-word-limit/>
+      </el-form-item>
+      <el-form-item label="手机号" prop="mobile">
+        <el-input v-model="form.mobile" maxlength="11" show-word-limit/>
+      </el-form-item>
+      <el-form-item label="证书类型" prop="certType">
+        <el-cascader
+          style="width: 100%"
+          v-model="form.certType"
+          :options="options"
+          clearable/>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit('form')">签发</el-button>
+        <el-button @click="resetForm('form')">重置</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
+</template>
+
+<script>
+  import axios from 'axios'
+
+  export default {
+    name: 'Sign',
+    props: {
+      genCertReq: Function,
+    },
+    created () {
+
+    },
+    mounted () {
+
+    },
+    data() {
+      return {
+        // 表单
+        form: {
+          name: '',
+          idCode: '',
+          mobile: '',
+          certType: [],
+        },
+        // 表单规则
+        rules: {
+          name: [
+            { required: true, message: '请输入名称', trigger: 'blur' }
+          ],
+          idCode: [
+            { required: true, message: '请输入身份证', trigger: 'blur' },
+            { min: 18, max: 18, message: '二代身份证长度不正确', trigger: 'blur' }
+          ],
+          mobile: [
+            { required: true, message: '请输入手机号', trigger: 'blur' },
+            { min: 11, max: 11, message: '手机号长度不正确', trigger: 'blur' }
+          ],
+          certType: [
+            { required: true, message: '请选择证书类型', trigger: 'change' }
+          ],
+        },
+        // 证书类型
+        options: [
+          {value:1, label:'机构证书',
+            children: [
+              {value:1, label: 'RSA',
+                children: [
+                  {value: 1024, label: '1024'},
+                  {value: 2048, label: '2048'}
+                ]
+              },
+              {value:2, label: 'SM2',
+                children: [
+                  {value: 256, label: '256'}
+                ]
+              }
+            ]
+          },
+          {value:2, label:'个人证书',
+            children: [
+              {value:1, label: 'RSA',
+                children: [
+                  {value: 1024, label: '1024'},
+                  {value: 2048, label: '2048'}
+                ]
+              },
+              {value:2, label: 'SM2',
+                children: [
+                  {value: 256, label: '256'}
+                ]
+              }
+            ]
+          }
+        ],
+        // loading加载层text
+        loadingText: '',
+        // loading
+        loading: null
+      }
+    },
+    methods: {
+      /**
+       * 打开加载层
+       */
+      openLoading() {
+        console.log('openLoading()')
+        this.loading = this.$loading({
+          lock: true,
+          text: '正在验证表单',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        })
+      },
+      /**
+       * 提交签发证书
+       */
+      onSubmit(formName) {
+        new Promise((resolve, reject) => {
+          this.openLoading()
+          setTimeout(function(){
+            resolve()
+          }, 100);
+        }).then(() => {
+          // 验证表单
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              // 表单验证成功，
+              // 1、初始化请求数据
+              new Promise((resolve, reject) => {
+                this.loading.text = '正在初始化请求数据'
+                setTimeout(function(){
+                  resolve()
+                }, 100);
+              }).then(() => {
+                const certTypeInfo = this.form.certType
+                const certType = certTypeInfo[0];
+                const keyAlg = certTypeInfo[1];
+                const bit = certTypeInfo[2];
+                let policyCode = '';
+                let feeCode = '';
+                if (certType === 1) {
+                  // 机构证书
+                  alert('暂不支持机构证书')
+                  this.loading.close()
+                  return false
+                } else {
+                  feeCode = '20200616_private_user_new_1m'
+                  // 个人证书
+                  if (keyAlg == 1) {
+                    // RSA
+                    policyCode = '20200616-private-user-rsa-double'
+                  } else {
+                    // SM2
+                    policyCode = '20200616-private-user-sm2-double'
+                  }
+                }
+                // 2、生成客户端请求 csr+authCode请求码
+                new Promise((resolve, reject) => {
+                  this.loading.text = '正在生成客户端请求'
+                  setTimeout(function(){
+                    resolve()
+                  }, 100);
+                }).then(() => {
+                  let certReq = ''
+                  const certReqResult = this.genCertReq(keyAlg, true, bit)
+                  if(certReqResult.isSuccess) {
+                    certReq = certReqResult.certReq
+                  } else {
+                    alert(certReqResult.msg)
+                    this.loading.close()
+                    return false
+                  }
+                  // 3、封装请求数据
+                  const  bizRequest = {
+                    bizTypeCode: 10,
+                    policyCode: policyCode,
+                    feeCode: feeCode,
+                    certReq: certReq,
+                    name: this.form.name,
+                    idCode: this.form.idCode,
+                    mobile: this.form.mobile
+                  }
+                  let serverRequest = {
+                    appCode: '20200616_privatization',
+                    isEnc: false,
+                    bizRequest: bizRequest
+                  }
+                  // 4、调用发证服务
+                  new Promise((resolve, reject) => {
+                    this.loading.text = '正在请求签发证书'
+                    setTimeout(function(){
+                      resolve()
+                    }, 100);
+                  }).then(() => {
+                    const url = 'http://192.168.0.254:8080/issue/server'
+                    axios.post(url, serverRequest).then(response => {
+                      if (response.code === 1) {
+                        const signCert = response.data.signCert
+                      } else {
+                        alert('发证失败：' + response.message)
+                        this.loading.close()
+                        return false
+                      }
+                    }).catch(error => {
+                      alert(error)
+                    })
+                  })
+
+                })
+              })
+            } else {
+              // 表单验证失败
+              this.loading.close()
+              return false;
+            }
+          })
+        })
+
+      },
+      /**
+       * 重置提示信息
+       * @param formName
+       */
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      }
+    }
+  }
+</script>
+
+<style scoped>
+
+</style>

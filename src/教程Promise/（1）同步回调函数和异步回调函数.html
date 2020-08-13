@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>同步回调函数和异步回调函数</title>
+</head>
+<body>
+    <div id="demo">
+
+    </div>
+
+    <script type="text/javascript">
+        // 1、forEach => 同步回调函数
+        const array = [1,3,5,7,9,]
+        array.forEach(item => {
+          console.log(item)
+        })
+        console.log('forEach()之后')
+
+        // 2、setTimeout => 异步回调函数
+        setTimeout(() => {
+          console.log('setTimeout回调函数')
+        }, 0)
+        console.log('setTimeout()之后')
+
+    </script>
+</body>
+</html>
